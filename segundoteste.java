@@ -3,25 +3,33 @@ import java.util.List;
 
 // TODO:
 // - ERROS TRATADOS COM EXCEPETIONS
+// - aprovarCandidato -> apenas para qualificados - EXCEPTION "Candidato não encontrado"
+// - desqualificarCandidato -> qualquer um
 // - ENVIAR COMO ZIP OU COMO ARQUIVO DO GITHUB
+
+// - * marcarEntrevista -> apenas para recebidos - EXCEPTION "Candidato não encontrado"
 
 public class segundoteste {
   public static void main(String[] args) {
+    // TESTES:
+    
     Segundo segundo = new Segundo();
-    System.out.println(segundo.iniciarProcesso("Masih"));
-    System.out.println(segundo.iniciarProcesso("Masih"));
-    System.out.println(segundo.iniciarProcesso("Kaká"));
-    System.out.println(segundo.iniciarProcesso("Ronildo"));
-    System.out.println(segundo.iniciarProcesso("Felipe"));
-    System.out.println(segundo.iniciarProcesso("Goh"));
-    segundo.desqualificarCandidato(0);
+    System.out.println(segundo.iniciarProcesso("Pessoa 1"));
+    // System.out.println(segundo.iniciarProcesso("Pessoa 1"));
+    System.out.println(segundo.iniciarProcesso("Pessoa 2"));
+    System.out.println(segundo.iniciarProcesso("Pessoa 3"));
+    System.out.println(segundo.iniciarProcesso("Pessoa 4"));
+    System.out.println(segundo.iniciarProcesso("Pessoa 5"));
+    // segundo.desqualificarCandidato(0);
     segundo.desqualificarCandidato(1);
-    segundo.marcarEntrevista(0);
+    // segundo.marcarEntrevista(0);
     segundo.marcarEntrevista(2);
-    segundo.aprovarCandidato(0);
+    segundo.marcarEntrevista(3);
+    // segundo.aprovarCandidato(0);
+    // segundo.aprovarCandidato(3); //ERRO PQ É RECEBIDO E NÃO QUALIFICADO
     segundo.aprovarCandidato(3);
-    System.out.println(segundo.verificarStatusCandidato(0));
-    System.out.println(segundo.verificarStatusCandidato(1));
+    // System.out.println(segundo.verificarStatusCandidato(0));
+    // System.out.println(segundo.verificarStatusCandidato(1));
     System.out.println(segundo.verificarStatusCandidato(2));
     System.out.println(segundo.verificarStatusCandidato(3));
     System.out.println(segundo.verificarStatusCandidato(4));
@@ -88,8 +96,7 @@ public class segundoteste {
     public int iniciarProcesso(String nome) {
       Candidato jaParticipa = buscarCandidatoPorNome(nome);
       if (jaParticipa != null) {
-        System.out.println("Candidato já participa do processo.");
-        return 0;
+        throw new RuntimeException("Candidato já participa do processo.");
       } else {
         Candidato novoCandidato = new Candidato(nome, this.codCandidatoNovo, StatusCandidato.Recebido);
         this.candidatos.add(novoCandidato);
@@ -100,10 +107,10 @@ public class segundoteste {
 
     public void marcarEntrevista(int codCandidato) {
       Candidato candidato = buscarCandidatoPorCodigo(codCandidato);
-      if (candidato != null) {
+      if (candidato != null && candidato.status == StatusCandidato.Recebido) {
         candidato.status = StatusCandidato.Qualificado;
       } else {
-        System.out.println("Candidato não encontrado");
+        throw new RuntimeException("Candidato não encontrado");
       }
     }
 
@@ -112,7 +119,7 @@ public class segundoteste {
       if (candidato != null) {
         this.candidatos.remove(candidato);
       } else {
-        System.out.println("Candidato não encontrado");
+        throw new RuntimeException("Candidato não encontrado");
       }
     }
 
@@ -121,16 +128,16 @@ public class segundoteste {
       if (candidato != null) {
         return candidato.status.toString();
       } else {
-        return "Candidato não encontrado";
+        throw new RuntimeException("Candidato não encontrado");
       }
     }
 
     public void aprovarCandidato(int codCandidato) {
       Candidato candidato = buscarCandidatoPorCodigo(codCandidato);
-      if (candidato != null) {
+      if (candidato != null && candidato.status == StatusCandidato.Qualificado) {
         candidato.status = StatusCandidato.Aprovado;
       } else {
-        System.out.println("Candidato não encontrado");
+        throw new RuntimeException("Candidato não encontrado");
       }
     }
 
