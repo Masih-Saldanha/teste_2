@@ -1,0 +1,152 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+public class segundoteste {
+  public static void main(String[] args) {
+    Segundo segundo = new Segundo();
+    System.out.println(segundo.iniciarProcesso("Masih"));
+    System.out.println(segundo.iniciarProcesso("Masih"));
+    System.out.println(segundo.iniciarProcesso("Kaká"));
+    System.out.println(segundo.iniciarProcesso("Ronildo"));
+    System.out.println(segundo.iniciarProcesso("Felipe"));
+    System.out.println(segundo.iniciarProcesso("Goh"));
+    segundo.desqualificarCandidato(0);
+    segundo.desqualificarCandidato(1);
+    segundo.marcarEntrevista(0);
+    segundo.marcarEntrevista(2);
+    segundo.aprovarCandidato(0);
+    segundo.aprovarCandidato(3);
+    System.out.println(segundo.verificarStatusCandidato(0));
+    System.out.println(segundo.verificarStatusCandidato(1));
+    System.out.println(segundo.verificarStatusCandidato(2));
+    System.out.println(segundo.verificarStatusCandidato(3));
+    System.out.println(segundo.verificarStatusCandidato(4));
+    System.out.println(segundo.obterAprovados());
+    System.out.println("Candidatos Size: " + segundo.candidatos.size());
+    System.out.println(segundo.candidatos.get(0).codCandidato);
+    System.out.println(segundo.candidatos.get(0).nome);
+    System.out.println(segundo.candidatos.get(0).status);
+    System.out.println(segundo.candidatos.get(1).codCandidato);
+    System.out.println(segundo.candidatos.get(1).nome);
+    System.out.println(segundo.candidatos.get(1).status);
+    System.out.println(segundo.candidatos.get(2).codCandidato);
+    System.out.println(segundo.candidatos.get(2).nome);
+    System.out.println(segundo.candidatos.get(2).status);
+    System.out.println(segundo.candidatos.get(3).codCandidato);
+    System.out.println(segundo.candidatos.get(3).nome);
+    System.out.println(segundo.candidatos.get(3).status);
+  }
+
+  public enum StatusCandidato {
+    RECEBIDO,
+    QUALIFICADO,
+    APROVADO,
+  }
+
+  public static class Candidato {
+    public String nome;
+    public int codCandidato;
+    public StatusCandidato status;
+
+    Candidato(String nome, int codCandidato, StatusCandidato status) {
+      this.nome = nome;
+      this.codCandidato = codCandidato;
+      this.status = status;
+    }
+  }
+
+  public static class Segundo {
+    List<Candidato> candidatos;
+    int codCandidatoNovo = 1;
+
+    Segundo() {
+      this.candidatos = new ArrayList<>();
+    }
+
+    public int iniciarProcesso(String nome) {
+      boolean jaParticipa = false;
+      for (int i = 0; i < this.candidatos.size(); i++) {
+        Candidato candidato = this.candidatos.get(i);
+        if (Objects.equals(candidato.nome, nome)) {
+          System.out.println("Candidato já participa do processo.");
+          jaParticipa = true;
+          break;
+        }
+      }
+      if (!jaParticipa) {
+        Candidato novoCandidato = new Candidato(nome, this.codCandidatoNovo, StatusCandidato.RECEBIDO);
+        this.candidatos.add(novoCandidato);
+        this.codCandidatoNovo++;
+        return novoCandidato.codCandidato;
+      } else {
+        return 0;
+      }
+    }
+
+    public void marcarEntrevista(int codCandidato) {
+      boolean naoEncontrado = true;
+      for (int i = 0; i < this.candidatos.size(); i++) {
+        Candidato candidato = this.candidatos.get(i);
+        if (candidato.codCandidato == codCandidato) {
+          naoEncontrado = false;
+          candidato.status = StatusCandidato.QUALIFICADO;
+          break;
+        }
+      }
+      if (naoEncontrado) {
+        System.out.println("Candidato não encontrado");
+      }
+    }
+
+    public void desqualificarCandidato(int codCandidato) {
+      boolean naoEncontrado = true;
+      for (int i = 0; i < this.candidatos.size(); i++) {
+        Candidato candidato = this.candidatos.get(i);
+        if (candidato.codCandidato == codCandidato) {
+          naoEncontrado = false;
+          candidatos.remove(i);
+          break;
+        }
+      }
+      if (naoEncontrado) {
+        System.out.println("Candidato não encontrado");
+      }
+    }
+
+    public String verificarStatusCandidato(int codCandidato) {
+      for (int i = 0; i < this.candidatos.size(); i++) {
+        Candidato candidato = this.candidatos.get(i);
+        if (candidato.codCandidato == codCandidato) {
+          return candidato.status.toString();
+        }
+      }
+      return "Candidato não encontrado";
+    }
+
+    public void aprovarCandidato(int codCandidato) {
+      boolean naoEncontrado = true;
+      for (int i = 0; i < this.candidatos.size(); i++) {
+        Candidato candidato = this.candidatos.get(i);
+        if (candidato.codCandidato == codCandidato) {
+          naoEncontrado = false;
+          candidato.status = StatusCandidato.APROVADO;
+          break;
+        }
+      }
+      if (naoEncontrado) {
+        System.out.println("Candidato não encontrado");
+      }
+    }
+
+    public List<String> obterAprovados() {
+      List<String> aprovados = new ArrayList<>();
+      this.candidatos.forEach(candidato -> {
+        if (candidato.status == StatusCandidato.APROVADO) {
+          aprovados.add(candidato.nome);
+        }
+      });
+      return aprovados;
+    }
+  }
+}
