@@ -31,7 +31,7 @@ public class Segundo {
 
   public int iniciarProcesso(String nome) {
     Candidato jaParticipa = buscarCandidatoPorNome(nome);
-    if (jaParticipa != null) {
+    if (jaParticipa != null || nome.isBlank()) {
       throw new RuntimeException("Candidato já participa do processo.");
     } else {
       Candidato novoCandidato = new Candidato(nome, this.codCandidatoNovo, StatusCandidato.Recebido);
